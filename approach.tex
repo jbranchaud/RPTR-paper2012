@@ -9,7 +9,24 @@ Lastly, we will discuss the reports that RPTR is able to provide to developer's 
 
 \subsection{Preprocessing}
 
-Content about the preprocessing and what it solves.
+Many ROS systems contain one or more launch files which are XML files that hold various configuration information. This includes information about the nodes that will be executing at runtime, values that various parameters should take on, and references to other configuration files (e.g. YAML files and other launch files). Because of the parameter information available in these files, it is crucial that RPTR collect this data in a preprocessing phase.
+
+The preprocessing phase in our tool involves a Python script that utilizes Python's standard DOM parser to extract the pertinent information. The pertinent information includes the \texttt{<param>}, \texttt{<include>}, and \texttt{<rosparam>} tags and their attributes. Additionally, we collect information about the \texttt{<node>} tags so that we know which nodes will be executing at runtime. Examples of all of these tags can be found in Fig.~\ref{fig:launchtags}.
+
+\begin{figure}
+	\begin{enumerate}[(a)]
+		\item \texttt{<param name="namespace/path/param1" type="int" value="1" />}
+		\item \texttt{<include file="$\$$(find package\_name)/../launch/filename.launch" />}
+		\item \texttt{<rosparam file="$\$$(find package\_name)/../launch/dir\_name/config.yaml" />}
+		\item \texttt{<node pkg="package\_name" name="node1" type="node\_type" ... > ... </node>}
+	\end{enumerate}
+	\caption{Interesting tags in ROS .launch files}
+	\label{fig:launchtags}
+\end{figure}
+
+The first type of tag that we are interested in is the \texttt{<param>} tag found in Fig.~\ref{fig:launchtags}(a). For each of these tags that we find in the launch file, we are interested in five pieces of information which we can extract from both the tag's attributes as well as its position relative to other tags in the launch file. We first want to know the parent of the tag which is based on the tag's position. If the \texttt{<param>} tag is directly nested below the \texttt{<launch>} tag, then it is what is called a \emph{global parameter} and its parent is considered to be \emph{launch}. All other \texttt{<param>} tags will be found nested directly within a particular \texttt{<node>} tag, in which case we consider its parent to be the name of that node. Second we want to know the namespace of the tag which can be extracted from the name attribute. If the name begins with a $\sim$ (tilde), then the namespace is private. On the other hand, if there is nothing prepending the name, then it has a global namespace. Most commonly though, the name will be prepended by a forward-slash-separated path (as can be seen in Fig.~\ref{fig:launchtags}(a)). In this case, the namespace is relative/base which means that the namespace of that parameter is that path relative to its parent. It is important that we extract each parameter's namespace so that we know the scope of that parameter. Next we want the actual name of the parameter which is the remaining portion of the name attribute after extracting its namespace. We then want the value that the parameter is being set to which is the value attribute. Last we want the type of the parameter if it is given. The type can be \emph{int}, \emph{double}, \emph{bool}, or \emph{string} or if none is given, we denote it with \emph{UNK} (for unknown). With all of this parameter information, we are able to precisely characterize how the system's parameters are initially configured.
+
+*** Where should the DB schema go? We need to present that table somewhere in the approach section.
 
 
 \subsection{Instrumentation}
