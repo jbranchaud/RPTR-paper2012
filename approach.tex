@@ -1,6 +1,10 @@
 \section{Approach}
 
-Our approach to solving the problem we have presented is the following.
+In this section, we present our approach to doing runtime parameter tracking of ROS systems. Like many runtime monitoring systems, the key to our approach is instrumentation of the system under analysis. Finding a viable method of instrumenting a ROS system was a non-trivial task and as one of our contributions, we present the failed and successful approaches. We believe that not only the successful, but the failed approaches, especially, are useful for the insights they provide.
+
+In addition to the instrumentation, RPTR has to implement two unique pieces that are specialized to ROS systems. First, ROS systems are able to do plenty of parameter interaction in the ROS launch files before the actual system is even executing, so these launch files must be preprocessed. We will discuss the task of preprocessing in the following subsection. Second, ROS systems are unique in their distributed nature and thus require a custom approach to monitoring, collecting, and storing the parameter interaction information.
+
+Lastly, we will discuss the reports that RPTR is able to provide to developer's of a ROS system. Not only can RPTR generate these standard reports, but it can also provide feedback based on end-user queries.
 
 
 \subsection{Preprocessing}
