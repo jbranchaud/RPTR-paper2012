@@ -1,3 +1,18 @@
 \section{Introduction}
 
-Here is the introduction, add more content now!
+ROS is a software framework and environment for the development of robotics software. It allows developers to write software for many ROS nodes which can be robots or other computer entities. These systems are not only able to exist in isolation, but they can also communicate via topics (which are a Publish/Subscribe mechanism provided by ROS). Another form of interaction is through the parameter server which contains an entire ROS system's parameters and their associated values. The parameter server (and its parameters) is one of a number of features that makes the ROS framework unique. These parameters are a powerful feature in ROS that allow these systems to be highly configurable. However, just like with any language's or system's features, these can be misused or even abused. Whether developers are intentionally or unintentionally misusing parameters, it is important to identify and report this to them. From there, it is up to the developer to right any wrongs that exist in the code.
+
+Currently, the misuse of parameters can only be indirectly discovered when that misuse results in a system failure. Even with that indication though, it is difficult, if not impossible to discover the root of the problem. The root of the problem being where the misuse of the parameter occurred relative to the execution of the program and who misused it (which ROS node). As systems quickly grow in size as they undoubtedly do in the domain of robotics, it becomes increasingly difficult to track down the issues related to parameters. Systems can have hundred to thousands of parameters and checking them by hand simply is not feasible. Currently, no tools exist to help a developer understand the \emph{where} and \emph{who} of parameter-based errors. The task of providing this information to the developer is non-trivial and requires a given system to be dynamically analyzed. Thus, we have developed an approach to do runtime monitoring of parameters in ROS systems.
+
+By tracking the interactions that each node has with parameters during the execution of the system, we are able to give the developer insights into the life of parameters in their system. By capturing a temporal view of the interactions that each parameter undergoes and then mapping those to the nodes involved, we are able to provide \emph{where} and \emph{who} information to the developers regarding parameters.
+
+In order to provide a proof of concept for this analysis, we have developed a prototype analysis framework, RPTR, for doing dynamic runtime monitoring of ROS systems. Our approach, which is explained in greater detail in Sec. 3, involves four main pieces. First, our analysis enters into a preprocessing phase which extracts static information provided in various configuration files. Second, our analysis instruments the C++ code which makes up the nodes that we will be monitoring. Next, an addition node is added to the system for capturing and storing all of the monitored information. Finally, our system is then able to synthesize this information for the developer into reports that contain error alerts as well as logs of parameter activity.
+
+The main contributions of this paper are the following:
+\begin{enumerate}
+	\item Contribution 1...
+	\item Contribution 2...
+	\item Contribution 3...
+\end{enumerate}
+
+*** Explain the organization of the paper here...
