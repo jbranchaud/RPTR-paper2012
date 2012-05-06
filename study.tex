@@ -1,3 +1,12 @@
 \section{Study}
 
-We studying the following artifacts and found these results.
+One of the primary questions we sought to study was the use of parameters in ROS systems. Our hypothesis was that parameters are set in large quantities either from the launch file or nodes as they are being initialized, and then read large quantities around the same time, after which very little parameter activity takes place. Such a hypothesis makes a tool like RPTR useful for verifying such hypothesis, as well as debugging long running systems that break the hypotheses (i.e. those that either frequently interact with parameters or only occasionally interact, but do so long after the system is initialized).
+
+First, we set out to verify that RPTR is operational and can be used to identify parameter errors in programs. We did this by creating a simple node that executes several parameter interactions sequentially. This allowed us to simultaneously debug RPTR and verify that it can be used to detect real errors (we injected several errors).
+
+Second, we examined several ROS systems that exist in the NIMBUS lab or on ROS.org. The most notable of these systems was the MIT AscTec stack. We chose this system because this system interacts with several parameters.  
+After examination, our hypothesis was confirmed: The majority of ROS parameter transactions take place at the beginning of the system launch, and do not seem to appear much during system execution. However, there are exceptions. For example, the PID stack from the Nimbus Lab interacts with the parameter server throughout the lifetime of its execution. For these types of systems, RPTR is an excellent choice for real time monitoring, as well as report-based analysis.
+
+\subsection{Discussion}
+
+Through the use of our tool, we have noticed two primary parameter usage patterns emerge. The first is what we have termed \emph{Sets and Gets} and the second we call \emph{Continuous Updater}. The \emph{Sets and Gets} pattern is when a system sets a bunch of parameters and then does getParams on those parameters. The \emph{Continuous Updater} pattern is another one that we see where a value that is a parameter is continuously updated so that other nodes can get that value. This occurs so that that value stays up to date.
